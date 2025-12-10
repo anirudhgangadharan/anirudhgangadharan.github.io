@@ -1,2 +1,2 @@
 # anirudhgangadharan.github.io
-Medical Student-Scientist CV | AI in Healthcare
+Medical Student-Researcher CV | AI in Healthcare
