@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG is All You Need — Democratizing Cardiac Imaging with LLMs</title>
+    <meta name="description" content="First demonstration of AI-mediated cross-modal cardiac inference from ECG to echocardiography using large language models. n=311 paired cases.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #555;
+            --text-tertiary: #888;
+            --accent: #0e4f6e;
+            --accent-light: #e8f2f8;
+            --accent-warm: #c4553a;
+            --border: #e2e0dc;
+            --border-light: #f0eeea;
+            --serif: 'Source Serif 4', 'Georgia', serif;
+            --sans: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Navigation Bar --- */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 250, 248, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+        }
+        .topbar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+        .topbar a:hover { color: var(--accent); }
+        .topbar-right { display: flex; gap: 1.5rem; }
+
+        /* --- Hero --- */
+        .hero {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 7rem 2rem 3rem;
+        }
+        .hero-label {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--serif);
+            font-size: 2.6rem;
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .hero-subtitle {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+        .authors {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .authors strong { font-weight: 600; color: var(--text); }
+        .affiliation {
+            font-size: 0.82rem;
+            color: var(--text-tertiary);
+            margin-bottom: 2rem;
+        }
+
+        /* --- Highlight Metrics Bar --- */
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 2.5rem 0;
+        }
+        .metric-cell {
+            background: var(--surface);
+            padding: 1.25rem 1rem;
+            text-align: center;
+        }
+        .metric-value {
+            font-family: var(--mono);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+        .metric-label {
+            font-size: 0.72rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.35rem;
+        }
+
+        /* --- Content --- */
+        .content {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .section {
+            margin-bottom: 3.5rem;
+        }
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .section h2 {
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        .section p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        /* --- Pipeline Diagram --- */
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin: 2rem 0;
+            padding: 2rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        .pipeline-step {
+            text-align: center;
+            padding: 0.75rem 1.2rem;
+            min-width: 100px;
+        }
+        .pipeline-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.4rem;
+        }
+        .pipeline-text {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+            line-height: 1.4;
+        }
+        .pipeline-arrow {
+            font-size: 1.2rem;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+
+        /* --- Figures --- */
+        .figure-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .figure-grid.two-col {
+            grid-template-columns: 1fr 1fr;
+        }
+        .figure {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .figure img {
+            width: 100%;
+            display: block;
+        }
+        .figure-caption {
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-light);
+            line-height: 1.5;
+        }
+        .figure-caption strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* --- Key Finding Callout --- */
+        .callout {
+            background: var(--accent-light);
+            border-left: 3px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .callout p {
+            font-size: 0.92rem;
+            color: var(--accent);
+            margin: 0;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* --- Innovation Tag --- */
+        .innovation {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .innovation-title {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--accent-warm);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        .innovation p {
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            max-width: 860px;
+            margin: 4rem auto 0;
+            padding: 2rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.82rem;
+            color: var(--text-tertiary);
+            padding-bottom: 3rem;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            text-align: right;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+            .figure-grid.two-col { grid-template-columns: 1fr; }
+            .pipeline { flex-wrap: wrap; gap: 0.5rem; }
+            .footer { flex-direction: column; gap: 1rem; }
+            .footer-links { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <nav class="topbar">
+        <a href="https://anirudhgangadharan.github.io/">← Anirudh Gangadharan</a>
+        <div class="topbar-right">
+            <a href="https://github.com/anirudhgangadharan" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/anirudh-gangadharan" target="_blank">LinkedIn</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-label">Original Research · Cardiology · AI</div>
+        <h1>ECG is All You Need</h1>
+        <div class="hero-subtitle">Democratizing Cardiac Imaging with Large Language Models — A Feasibility Study of Cross-Modal Cardiac Inference</div>
+
+        <div class="authors">
+            <strong>Azhar Tadas Wahab</strong>, <strong>Anirudh Gangadharan</strong>, Mohammad Bilal, Sahil Agarwala, Anam Fathima, Madiha Fathima
+        </div>
+        <div class="affiliation">
+            Department of Cardiology &amp; Medical AI Research · 2025
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="metrics-bar">
+            <div class="metric-cell">
+                <div class="metric-value">311</div>
+                <div class="metric-label">Paired Cases</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-value">0.394</div>
+                <div class="metric-label">Best r (EF)</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-value">64%</div>
+                <div class="metric-label">Within ±5% EF</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-value">6.4%</div>
+                <div class="metric-label">MAE (Best)</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+        <!-- Problem -->
+        <section class="section">
+            <div class="section-label">The Problem</div>
+            <p>
+                Over two billion people lack access to echocardiography — the primary tool for assessing cardiac structure and function. In resource-constrained settings across South Asia, Sub-Saharan Africa, and rural communities worldwide, patients with suspected heart failure, valvular disease, or post-infarction complications face diagnostic delays measured in weeks or months, not minutes.
+            </p>
+            <p>
+                The 12-lead electrocardiogram, by contrast, costs under $2 per test and is available in virtually every clinic. But ECG is conventionally understood as an electrophysiological tool — it measures electrical activity, not structural anatomy. This study asks: <em>can modern AI extract latent structural information from ECG waveforms, effectively inferring what an echocardiogram would show?</em>
+            </p>
+        </section>
+
+        <!-- Approach -->
+        <section class="section">
+            <div class="section-label">Approach</div>
+            <p>
+                We conducted a retrospective comparative analysis of 311 consecutive paired ECG–echocardiogram cases from a single cardiac centre. Three leading large language models — Grok 4, Claude Opus 4, and ChatGPT-4o — were given 12-lead ECG images and asked to generate complete echocardiographic reports through structured prompt engineering, with zero-shot inference and no fine-tuning.
+            </p>
+
+            <!-- Pipeline -->
+            <div class="pipeline">
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">📊</div>
+                    <div class="pipeline-text">12-Lead ECG<br>Image</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">🧠</div>
+                    <div class="pipeline-text">LLM<br>(Zero-shot)</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">📋</div>
+                    <div class="pipeline-text">Synthetic<br>ECHO Report</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">⚖️</div>
+                    <div class="pipeline-text">Statistical<br>Comparison</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">🏥</div>
+                    <div class="pipeline-text">Cardiologist<br>Gold Standard</div>
+                </div>
+            </div>
+
+            <p>
+                LLM-generated reports were compared against cardiologist-authored echocardiograms across ejection fraction (EF), diastolic dysfunction grading, valve regurgitation severity, and regional wall motion abnormalities (RWMA). Statistical analysis employed Pearson correlation, ICC, Bland-Altman analysis, weighted Cohen's Kappa, and Friedman test with post-hoc comparisons.
+            </p>
+        </section>
+
+        <!-- Key Results -->
+        <section class="section">
+            <div class="section-label">Key Results</div>
+
+            <div class="callout">
+                <p>Claude Opus 4 achieved the highest concordance with cardiologist assessments across all primary metrics — Pearson r = 0.394 (p &lt; 0.001), ICC = 0.368, with 63.6% of EF predictions falling within ±5% of true values. This represents a statistically significant advantage over both Grok 4 and ChatGPT (Friedman χ² = 36.3, p &lt; 0.001).</p>
+            </div>
+
+            <!-- Correlation Figure -->
+            <div class="figure-grid">
+                <div class="figure">
+                    <img src="figure2_ef_correlations.png" alt="EF correlation scatter plots for three LLMs vs cardiologist assessment">
+                    <div class="figure-caption">
+                        <strong>Figure 1.</strong> Ejection fraction correlation between LLM predictions and cardiologist assessments. Claude Opus 4 (centre) shows the strongest linear relationship (r = 0.394, p &lt; 0.001, n = 272). Dashed line indicates perfect agreement.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bland-Altman + Performance Summary -->
+            <div class="figure-grid two-col">
+                <div class="figure">
+                    <img src="figure1_bland_altman_ef.png" alt="Bland-Altman plot showing EF agreement between Claude Opus 4 and cardiologist">
+                    <div class="figure-caption">
+                        <strong>Figure 2.</strong> Bland-Altman analysis for Claude Opus 4. Mean bias of +0.3% with limits of agreement −18.6% to +19.3%, indicating minimal systematic error.
+                    </div>
+                </div>
+                <div class="figure">
+                    <img src="figure4_performance_summary.png" alt="Performance summary across all metrics and models">
+                    <div class="figure-caption">
+                        <strong>Figure 3.</strong> Comprehensive performance across EF correlation, RWMA detection, clinical agreement distribution, and documentation completeness.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Table -->
+            <div class="figure-grid">
+                <div class="figure">
+                    <img src="table1_performance_metrics.png" alt="Performance metrics table comparing all three LLMs">
+                    <div class="figure-caption">
+                        <strong>Table 1.</strong> Summary performance metrics. Claude Opus 4 leads across EF correlation, MAE, clinical agreement, and RWMA sensitivity. *** p &lt; 0.001.
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                For diastolic dysfunction grading, Claude Opus 4 achieved fair agreement (weighted κ = 0.324), outperforming both Grok 4 (κ = 0.172) and ChatGPT (κ = 0.135). RWMA detection showed a conservative prediction pattern across all models — high specificity (82.8–91.9%) but limited sensitivity (16.7–46.1%), suggesting the models prioritise avoiding false positives.
+            </p>
+            <p>
+                A notable secondary finding: LLMs demonstrated superior documentation completeness compared to cardiologists — documenting EF in 99% of reports versus 87.5% in cardiologist reports, and diastolic dysfunction in 99–100% versus 91.9%.
+            </p>
+        </section>
+
+        <!-- Clinical Implications -->
+        <section class="section">
+            <div class="section-label">Clinical Implications</div>
+            <p>
+                Current performance is insufficient for diagnostic replacement of echocardiography. However, the results establish proof-of-concept for ECG-based cardiac triage: in settings where echo is unavailable, an LLM-generated preliminary assessment could identify patients requiring urgent referral (specificity 87%) at a cost of $2 per ECG versus $100+ for echo plus transport.
+            </p>
+            <p>
+                The clinical workflow we envision: a rural health worker obtains a 12-lead ECG, generates an LLM-based preliminary cardiac assessment, and uses the output to decide whether to refer — reducing blind referrals while catching approximately half of significant wall motion abnormalities that would otherwise go undetected until clinical deterioration.
+            </p>
+        </section>
+
+        <!-- Innovation -->
+        <div class="innovation">
+            <div class="innovation-title">Key Innovation</div>
+            <p>
+                First demonstration that large language models can perform cross-modal cardiac inference — generating echocardiographic assessments from ECG waveforms alone, without fine-tuning, training data, or direct imaging input. This suggests ECG waveforms encode exploitable latent structural information accessible to multimodal AI systems.
+            </p>
+        </div>
+
+        <!-- Future Work -->
+        <section class="section">
+            <div class="section-label">Ongoing &amp; Future Work</div>
+            <p>
+                Immediate next steps focus on improving RWMA detection sensitivity through model fine-tuning on annotated ECG–echo datasets and incorporating multimodal inputs (clinical history + ECG). We are pursuing external validation across multi-centre cohorts and diverse pathologies, with the long-term goal of a prospective clinical trial measuring time-to-appropriate-referral and 90-day patient outcomes.
+            </p>
+            <p>
+                Technical development includes ensemble methods combining multiple LLMs, uncertainty quantification with confidence scoring, explainability overlays identifying which ECG features drive predictions, and integration with point-of-care ECG devices for real-time deployment.
+            </p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div>
+            <div>© 2025 Wahab, Gangadharan et al.</div>
+            <div style="margin-top: 0.25rem;">Contact: <a href="mailto:gangadharananirudh@gmail.com">gangadharananirudh@gmail.com</a></div>
+        </div>
+        <div class="footer-links">
+            <a href="https://anirudhgangadharan.github.io/">Portfolio</a>
+            <a href="https://github.com/anirudhgangadharan">GitHub</a>
+            <a href="https://linkedin.com/in/anirudh-gangadharan">LinkedIn</a>
+        </div>
+    </footer>
+
+</body>
+</html>
