@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smartphone-based ML pipeline for non-invasive hemoglobin estimation comparing palpebral conjunctiva and buccal mucosa in 600 pregnant women. AFMC Oral Presentation, May 2026.">
+  <title>HemoglobinAI — Smartphone-Based Non-Invasive Hemoglobin Estimation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #111;
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Nav ── */
+    nav {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 2.8rem;
+    }
+    nav .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    nav a {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.88rem;
+    }
+    nav .nav-right { display: flex; gap: 1.4rem; }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 2.4rem; }
+    .hero h1 {
+      font-size: 1.85rem;
+      font-weight: bold;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+    .hero .subtitle {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .hero .meta {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.6;
+    }
+    .hero .meta strong { color: #222; }
+
+    /* ── Body text ── */
+    p { margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin: 2.4rem 0 0.6rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 1.4rem 0 0.3rem;
+    }
+
+    ul, ol {
+      padding-left: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    li { margin-bottom: 0.3rem; }
+
+    /* ── Rule ── */
+    hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 2.4rem 0;
+    }
+
+    /* ── Figures ── */
+    figure {
+      margin: 1.6rem 0;
+    }
+    figure img {
+      width: 100%;
+      display: block;
+    }
+    figcaption {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 1.2rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.45rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+    }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.center, th.center { text-align: center; }
+    tr.best td { font-weight: 600; }
+    .table-note {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.78rem;
+      color: #666;
+      margin-top: 0.3rem;
+    }
+
+    /* ── References ── */
+    ol.refs {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.84rem;
+      color: #444;
+      line-height: 1.55;
+    }
+    ol.refs li { margin-bottom: 0.5rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid #e0e0e0;
+      margin-top: 3rem;
+      padding: 1.4rem 0 2.4rem;
+    }
+    footer p {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      color: #777;
+    }
+
+    sup { font-size: 0.7em; }
+
+    @media (max-width: 520px) {
+      body { font-size: 15px; }
+      .hero h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="https://anirudhgangadharan.github.io/">← Anirudh Gangadharan</a>
+    <div class="nav-right">
+      <a href="https://huggingface.co/spaces/medtechdev/anemia-screening">Live Demo</a>
+      <a href="https://github.com/anirudhgangadharan">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <header class="hero">
+    <h1>HemoglobinAI</h1>
+    <p class="subtitle">Development of a Smartphone-Based Machine Learning Pipeline for Hemoglobin Level Prediction among Pregnant Women: A Comparative Performance of Palpebral Conjunctiva with Buccal Mucosa Images</p>
+    <p class="meta">
+      <strong>Dr. Jannatbi L. Iti<sup>1</sup>, Anirudh Gangadharan<sup>2</sup></strong><br>
+      <sup>1</sup>Assistant Professor, Department of Community Medicine &nbsp;·&nbsp;
+      <sup>2</sup>IIIrd Year Part 1 MBBS Student<br>
+      Gadag Institute of Medical Sciences, Karnataka<br>
+      AFMC Oral Presentation · May 1, 2026
+    </p>
+  </header>
+
+  <hr>
+
+  <section>
+    <h2>Background</h2>
+    <ol>
+      <li>Anemia affects 52.2% of pregnant women in India.<sup>1</sup></li>
+      <li>Anaemia is directly or indirectly responsible for 40% of maternal mortality, despite national programs such as Anemia Mukt Bharat and Poshan Abhiyan.<sup>2</sup></li>
+      <li>Routine haemoglobin estimation relies on invasive methods that impose compounded costs: transport, laboratory fees, and lost wages.<sup>3</sup></li>
+      <li>Conjunctival and mucosal pallor are established clinical indicators of anemia, representing a non-invasive signal amenable to smartphone imaging.<sup>4</sup></li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Objectives</h2>
+    <ol>
+      <li>To develop a machine learning model for haemoglobin level prediction using smartphone images from palpebral conjunctiva and buccal mucosa among pregnant women at a tertiary care centre.</li>
+      <li>To compare machine learning models based on palpebral conjunctiva images with those based on buccal mucosa images for haemoglobin level prediction among pregnant women at a tertiary care centre.</li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Methodology</h2>
+
+    <p><strong>Study design.</strong> Observational cross-sectional study. Source population: pregnant women aged 18–45 attending OBG OPD for routine antenatal checkup at GIMS, Gadag. Study period: 1 January 2025 to 31 December 2025.</p>
+
+    <p><strong>Sample size.</strong> n = z²pq/d² = 600, computed using prevalence p = 46%,<sup>5</sup> q = 54, d = 9% of p = 4.14. The same n = 600 satisfies 5-fold cross-validation requirements. Sampling technique: purposive sampling.</p>
+
+    <p><strong>Inclusion.</strong> All pregnant women attending the centre who gave written informed consent.</p>
+
+    <p><strong>Exclusion.</strong> Active eye infections (e.g. conjunctivitis); cosmetic contact lenses; periorbital trauma; blood transfusion or IV iron sucrose within the preceding 15 days.</p>
+
+    <p><strong>Data collection.</strong> Following IEC approval and written informed consent, data were collected via pre-tested semi-structured questionnaire, including standardised smartphone photographs of the palpebral conjunctiva and buccal mucosa alongside a colour-calibration reference card.</p>
+
+    <p><strong>Statistical analysis.</strong> Data entered in MS Excel; analysed using frequency, percentage, and chi-square test (SPSS v21).</p>
+
+    <figure>
+      <img src="pipeline_diagram.png" alt="End-to-end ML pipeline: smartphone image capture with colour calibration card → YOLOv8 segmentation → feature extraction (RGB, HSV, LAB + sociodemographic) → ML model ensemble → performance metrics">
+      <figcaption>Figure 1. End-to-end pipeline. Smartphone images of the palpebral conjunctiva and buccal mucosa are colour-calibrated using a reference card, then segmented with a fine-tuned YOLOv8 model. RGB, HSV, and LAB colour features are combined with 52 sociodemographic and clinical features before evaluation across seven ML algorithms with 5-fold cross-validation.</figcaption>
+    </figure>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Results</h2>
+
+    <p>Among 600 pregnant women, mean age was 25.34 ± 3.889 years. The age distribution and haemoglobin summary statistics are shown below.</p>
+
+    <figure>
+      <img src="results_chart.jpg" alt="Bar chart: distribution by age group (n=600) and Table 01 showing haemoglobin means and standard deviations">
+      <figcaption>Figure 2 &amp; Table 01. Left: distribution by age group — 356 participants (59.3%) were ≤25 years, 238 (39.7%) were 26–35 years, and 6 (1.0%) were &gt;35 years. Right: mean haemoglobin by measurement method.</figcaption>
+    </figure>
+
+    <p>The chi-square analysis of the association between laboratory haemoglobin and predicted haemoglobin by imaging site is shown in Table 02.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption style="text-align:left; font-family: -apple-system,sans-serif; font-size:0.82rem; font-weight:600; margin-bottom:0.4rem; caption-side:top;">Table 02. Association between cyanmethemoglobin Hb and predicted Hb levels by imaging site (n = 600)</caption>
+        <thead>
+          <tr>
+            <th>Hb by cyanmethemoglobin</th>
+            <th colspan="4" class="center">Palpebral Conjunctiva</th>
+            <th colspan="4" class="center">Buccal Mucosa</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th class="center">&lt;10 g/dL</th>
+            <th class="center">10–11 g/dL</th>
+            <th class="center">&gt;11 g/dL</th>
+            <th class="center">Total</th>
+            <th class="center">&lt;10 g/dL</th>
+            <th class="center">10–11 g/dL</th>
+            <th class="center">&gt;11 g/dL</th>
+            <th class="center">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>&lt;10 g/dL</td>
+            <td class="center">0.4% (2)</td><td class="center">0.0% (0)</td><td class="center">0.0% (0)</td><td class="center">0.4% (2)</td>
+            <td class="center">0.4% (2)</td><td class="center">0.0% (0)</td><td class="center">0.2% (1)</td><td class="center">0.5% (3)</td>
+          </tr>
+          <tr>
+            <td>10–11 g/dL</td>
+            <td class="center">9.8% (59)</td><td class="center">15.3% (92)</td><td class="center">20.1% (124)</td><td class="center">45.8% (275)</td>
+            <td class="center">9.4% (57)</td><td class="center">14.0% (84)</td><td class="center">20.3% (122)</td><td class="center">43.8% (263)</td>
+          </tr>
+          <tr>
+            <td>&gt;11 g/dL</td>
+            <td class="center">9.8% (59)</td><td class="center">16.7% (100)</td><td class="center">27.3% (164)</td><td class="center">53.8% (323)</td>
+            <td class="center">10.2% (61)</td><td class="center">18.0% (108)</td><td class="center">27.5% (165)</td><td class="center">55.7% (334)</td>
+          </tr>
+          <tr>
+            <td><strong>Total</strong></td>
+            <td class="center">20.0% (120)</td><td class="center">32.0% (192)</td><td class="center">48.0% (288)</td><td class="center"><strong>100% (600)</strong></td>
+            <td class="center">20.0% (120)</td><td class="center">32.0% (192)</td><td class="center">48.0% (288)</td><td class="center"><strong>100% (600)</strong></td>
+          </tr>
+          <tr>
+            <td><em>p</em> value</td>
+            <td class="center" colspan="4"><strong>0.04</strong> (χ² = 10.1, df = 4)</td>
+            <td class="center" colspan="4">0.238 (χ² = 5.524, df = 4)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">Palpebral conjunctiva shows a statistically significant association with laboratory Hb (p = 0.04); buccal mucosa does not (p = 0.238).</p>
+    </div>
+
+    <p>Table 03 reports model performance across both imaging sites. SVR achieves the highest ROC AUC on both sites; palpebral conjunctiva consistently outperforms buccal mucosa across all models and all metrics.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption style="text-align:left; font-family: -apple-system,sans-serif; font-size:0.82rem; font-weight:600; margin-bottom:0.4rem; caption-side:top;">Table 03. ML model performance — palpebral conjunctiva vs buccal mucosa (n = 600)</caption>
+        <thead>
+          <tr>
+            <th rowspan="2">Model</th>
+            <th colspan="4" class="center">Palpebral Conjunctiva</th>
+            <th colspan="4" class="center">Buccal Mucosa</th>
+          </tr>
+          <tr>
+            <th class="center">AUC</th><th class="center">F1</th><th class="center">Acc.</th><th class="center">Prec.</th>
+            <th class="center">AUC</th><th class="center">F1</th><th class="center">Acc.</th><th class="center">Prec.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ridge</td>
+            <td class="num">0.617</td><td class="num">0.514</td><td class="num">0.583</td><td class="num">0.473</td>
+            <td class="num">0.602</td><td class="num">0.520</td><td class="num">0.585</td><td class="num">0.475</td>
+          </tr>
+          <tr>
+            <td>Lasso</td>
+            <td class="num">0.505</td><td class="num">0.179</td><td class="num">0.573</td><td class="num">0.364</td>
+            <td class="num">0.497</td><td class="num">0.211</td><td class="num">0.575</td><td class="num">0.386</td>
+          </tr>
+          <tr>
+            <td>ElasticNet</td>
+            <td class="num">0.549</td><td class="num">0.392</td><td class="num">0.565</td><td class="num">0.433</td>
+            <td class="num">0.547</td><td class="num">0.413</td><td class="num">0.565</td><td class="num">0.438</td>
+          </tr>
+          <tr class="best">
+            <td>SVR ★</td>
+            <td class="num">0.636</td><td class="num">0.522</td><td class="num">0.593</td><td class="num">0.484</td>
+            <td class="num">0.609</td><td class="num">0.519</td><td class="num">0.598</td><td class="num">0.489</td>
+          </tr>
+          <tr>
+            <td>Random Forest</td>
+            <td class="num">0.610</td><td class="num">0.515</td><td class="num">0.588</td><td class="num">0.478</td>
+            <td class="num">0.593</td><td class="num">0.507</td><td class="num">0.592</td><td class="num">0.481</td>
+          </tr>
+          <tr>
+            <td>Gradient Boosting</td>
+            <td class="num">0.599</td><td class="num">0.508</td><td class="num">0.583</td><td class="num">0.473</td>
+            <td class="num">0.571</td><td class="num">0.491</td><td class="num">0.575</td><td class="num">0.462</td>
+          </tr>
+          <tr>
+            <td>XGBoost</td>
+            <td class="num">0.604</td><td class="num">0.518</td><td class="num">0.585</td><td class="num">0.475</td>
+            <td class="num">0.590</td><td class="num">0.496</td><td class="num">0.570</td><td class="num">0.458</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">★ Best model by ROC AUC. Acc. = Accuracy, Prec. = Precision.</p>
+    </div>
+
+    <figure>
+      <img src="roc_curves.jpg" alt="ROC curves for anemia detection (Hb < 11 g/dL) — Panel A: Palpebral Conjunctiva, Panel B: Buccal Mucosa, seven models each">
+      <figcaption>Figure 3. ROC curves for anemia detection (&lt;11 g/dL). A: Palpebral conjunctiva — SVR achieves highest AUC = 0.636. B: Buccal mucosa — SVR AUC = 0.609. Palpebral conjunctiva shows consistently superior discrimination across all seven models.</figcaption>
+    </figure>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Conclusion</h2>
+    <ul>
+      <li>Machine learning models based on palpebral conjunctiva and buccal mucosa smartphone images can predict haemoglobin levels in pregnant women.</li>
+      <li>Palpebral conjunctiva performs marginally but consistently better than buccal mucosa across all models and metrics.</li>
+      <li>SVR outperforms the other six algorithms (Ridge, Lasso, ElasticNet, Random Forest, Gradient Boosting, XGBoost) on both imaging sites.</li>
+      <li>Smartphone-based non-invasive screening using either imaging site has potential as an anemia screening tool in low-resource settings.</li>
+    </ul>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Recommendations</h2>
+    <p>A multicentric design and a longitudinal follow-up study are the natural next steps to validate generalisability across populations and smartphone hardware.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Live Demo</h2>
+    <p>Upload a conjunctival image, enter clinical parameters, and receive an instant haemoglobin estimate. <a href="https://huggingface.co/spaces/medtechdev/anemia-screening">Open on HuggingFace →</a></p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>References</h2>
+    <ol class="refs">
+      <li>International Institute for Population Sciences (IIPS) and ICF. National Family Health Survey (NFHS-5), 2019–21: India. Mumbai: IIPS; 2021.</li>
+      <li>Singh A, Mangal M. Laboratory methods for estimation of hemoglobin: A review. <em>Int J Adv Med.</em> 2018;5(4):877–881.</li>
+      <li>Mannino RG, Myers DR, Ahn B, et al. Smartphone app for non-invasive detection of anemia using only patient-sourced photos. <em>Nat Commun.</em> 2018;9(1):4924.</li>
+      <li>Suner S, Parthasarathy S, Kasikcioglu E. Prediction of anemia from photographs of the palpebral conjunctiva. <em>JAMA Netw Open.</em> 2021;4(5):e215599.</li>
+      <li>International Institute for Population Sciences (IIPS) and ICF. National Family Health Survey (NFHS-4), India, 2015–16: Karnataka. Mumbai: IIPS; 2017.</li>
+      <li>Jocher G, Chaurasia A, Qiu J. Ultralytics YOLO [v8.0.0]. 2023. <a href="https://github.com/ultralytics/ultralytics">github.com/ultralytics/ultralytics</a></li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <p><em>The authors thank the Director, Principal, and Head of Department for permission to conduct this study; PG residents and interns for assistance with data collection; and all participants for their willing participation.</em></p>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Gangadharan et al. &nbsp;·&nbsp; <a href="mailto:gangadharananirudh@gmail.com">gangadharananirudh@gmail.com</a> &nbsp;·&nbsp; <a href="https://anirudhgangadharan.github.io/">Portfolio</a> &nbsp;·&nbsp; <a href="https://github.com/anirudhgangadharan">GitHub</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
