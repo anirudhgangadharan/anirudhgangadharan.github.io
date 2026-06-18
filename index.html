@@ -90,6 +90,22 @@
                 <li>Aimed at democratizing cardiac imaging in resource-constrained settings where echocardiography is unavailable.</li>
             </ul>
         </div>
+
+        <div class="item">
+            <h3>
+                <a href="https://anirudhgangadharan.github.io/ecg-echo-dl/" target="_blank">
+                    Screening for Left Ventricular Dysfunction from Photographed 12-Lead ECGs
+                </a>
+                <span class="project-tags">[Deep Learning — n=500]</span>
+            </h3>
+            <span class="date">Co-Investigator</span>
+            <ul>
+                <li>Trained a multi-task EfficientNet-B3 ensemble to predict ejection fraction and regional wall-motion abnormality directly from photographed 12-lead ECGs.</li>
+                <li>Three-stage transfer learning (ImageNet → PTB-XL 21,430 ECGs → 500 paired records) with inverse-density loss weighting and out-of-fold cross-validation.</li>
+                <li>Severe-EF detection AUROC 0.76, RWMA screen AUROC 0.70; best folds reach 0.83–0.86. Diagnosed and fixed shortcut-learning and regression-to-the-mean failure modes via Grad-CAM.</li>
+                <li>Deployed as a multilingual WhatsApp triage tool with a public Hugging Face demo.</li>
+            </ul>
+        </div>
         
        <div class="item">
             <h3>
@@ -158,6 +174,10 @@
             <li>
                 <strong>ECG is All You Need: Democratising Cardiac Imaging with LLMs.</strong><br>
                 <em>Doctors AI Global Summit 2025 Scientific Abstract Compendium</em>. McGraw Hill Education.  
+            </li>
+            <li>
+                <strong>Screening for Left Ventricular Dysfunction from Photographed 12-Lead ECGs: A Deep-Learning Feasibility Study.</strong><br>
+                National Conference on AI for Doctors, Solapur 2026.
             </li>
         </ul>
     </section>
