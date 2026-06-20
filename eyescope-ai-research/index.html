@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EyeScopeAI — offline smartphone ML model for refractive error screening in rural high-school children, North Karnataka. Cross-sectional feasibility study, n=110, ICMR STS Grant.">
+  <title>EyeScopeAI — Gangadharan et al.</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #111;
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 700px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Nav */
+    nav { padding: 1.2rem 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 2.8rem; }
+    nav .wrap { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; }
+    nav a { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.88rem; }
+    nav .nav-right { display: flex; gap: 1.4rem; }
+
+    /* Hero */
+    .hero { margin-bottom: 2.4rem; }
+    .hero h1 { font-size: 1.85rem; font-weight: bold; line-height: 1.3; margin-bottom: 0.75rem; }
+    .hero .subtitle { font-size: 1rem; color: #444; margin-bottom: 1rem; font-style: italic; }
+    .hero .meta { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.88rem; color: #555; line-height: 1.6; }
+    .hero .meta strong { color: #222; }
+
+    /* Body */
+    p { margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+    h2 { font-size: 1.25rem; font-weight: bold; margin: 2.4rem 0 0.6rem; }
+    h3 { font-size: 1rem; font-weight: bold; margin: 1.4rem 0 0.3rem; }
+    ul, ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+    li { margin-bottom: 0.3rem; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 2.4rem 0; }
+    sup { font-size: 0.7em; }
+
+    /* Figures */
+    figure { margin: 1.6rem 0; }
+    figure img { width: 100%; display: block; }
+    figcaption { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.82rem; color: #666; margin-top: 0.5rem; line-height: 1.5; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; margin: 1.2rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.82rem; line-height: 1.4; }
+    th, td { border: 1px solid #ccc; padding: 0.45rem 0.65rem; text-align: left; vertical-align: top; }
+    th { background: #f5f5f5; font-weight: 600; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.center, th.center { text-align: center; }
+    tr.best td { font-weight: 600; }
+    .table-note { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.78rem; color: #666; margin-top: 0.3rem; }
+
+    /* References */
+    ol.refs { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.84rem; color: #444; line-height: 1.55; }
+    ol.refs li { margin-bottom: 0.5rem; }
+
+    /* Footer */
+    footer { border-top: 1px solid #e0e0e0; margin-top: 3rem; padding: 1.4rem 0 2.4rem; }
+    footer p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.82rem; color: #777; }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      body { font-size: 15px; }
+      .hero h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="https://anirudhgangadharan.github.io/">← Anirudh Gangadharan</a>
+    <div class="nav-right">
+      <a href="https://github.com/anirudhgangadharan">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1>EyeScopeAI</h1>
+    <p class="subtitle">Development and internal validation of a smartphone-based, offline machine-learning model for refractive-error screening among rural high-school children in North Karnataka: a feasibility study</p>
+    <p class="meta">
+      <strong>Anirudh Gangadharan,<sup>1</sup> Jannatbi L. Iti<sup>2</sup></strong><br>
+      <sup>1</sup> Principal Investigator · <sup>2</sup> Co-Investigator<br>
+      Gadag Institute of Medical Sciences, Gadag, Karnataka<br>
+      ICMR STS Grant · 2026–2028
+    </p>
+  </header>
+
+  <hr>
+
+  <section>
+    <h2>Background</h2>
+    <ol>
+      <li>Uncorrected refractive error (URE) is the leading cause of moderate-to-severe vision impairment in children. In 2019, approximately 19 million children aged 5–15 years had such impairment globally, of whom around 67% were attributable to URE.<sup>1</sup></li>
+      <li>Myopia has risen from 23% of the global population in 2000 to 34% in 2020, and is projected to reach 50% by 2050.<sup>2</sup> Current school-age prevalence of URE stands at 36%.</li>
+      <li>Conventional screening is resource-intensive and inaccessible in rural settings. Clinical refraction requires specialist-led equipment — retinoscopes, autorefractors, phoropters — that are scarce in low-resource areas. Guardians must escort children to urban clinics, incurring time and cost barriers that delay diagnosis.</li>
+      <li>Fundus-based AI models show potential but depend on expensive cameras and high-quality images, limiting their utility in field conditions.</li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Objectives</h2>
+    <ol>
+      <li>To develop a machine-learning model that estimates the spherical equivalent (SE) of refractive error within ±0.5 D of autorefraction, using smartphone-measured visual acuity.</li>
+      <li>To assess the diagnostic accuracy of the ML model.</li>
+      <li>To assess the agreement between smartphone-based (EyeScopeAI) visual acuity and physician-administered Snellen visual acuity among high-school children.</li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Methodology</h2>
+
+    <p><strong>Study design.</strong> Observational cross-sectional study conducted in two rural high schools of Gadag district, North Karnataka (classes 8–10). Study period: 1 January 2026 to 30 June 2028.</p>
+
+    <p><strong>Sample size.</strong> To detect a mean absolute error (MAE) of ≤0.1 D with 95% confidence, assuming σ = 0.5 D,<sup>3</sup> using <em>n = Z²σ²/d²</em>, the minimum required sample was 96. With a 10% dropout allowance, n = 110. Two schools were selected by lottery method and 55 participants recruited from each.</p>
+
+    <p><strong>Participants.</strong> High-school children and teachers in the selected rural area willing to participate and able to follow app prompts. Children with blindness, ocular pathology (corneal opacity, dense cataract), recent ocular surgery (&lt;6 months), or cognitive/physical inability to interact with a smartphone were excluded.</p>
+
+    <p><strong>Study tools.</strong> Data were collected using a predesigned, pre-structured, and pretested questionnaire comprising: the Refractive Error Study in Children (RESC) instrument<sup>6</sup> — a WHO-validated survey for children aged 5–15 years covering visual acuity, spectacle ownership, and barriers to use; the System Usability Scale (SUS)<sup>7</sup> — a 10-item instrument yielding a 0–100 score where ≥68 denotes above-average usability; the Academic Stress Scale (ASS)<sup>8</sup> — a 35-item psychometric tool quantifying academic stressors; and smartphone-based visual acuity testing together with sociodemographic profiling.</p>
+
+    <p><strong>Digital visual acuity assessment.</strong> Participants underwent distance visual-acuity testing at a fixed 2 m distance. The screen was first calibrated against a known 5 cm × 5 cm reference card to compute pixels-per-inch and scale the tumbling-E optotypes. The child reported the orientation of each E; a correct response advanced to the next smaller optotype. The test terminated when the child failed two of three consecutive presentations, and the decimal visual acuity was recorded automatically.</p>
+
+    <p><strong>Gold-standard refraction.</strong> Physician-administered Snellen visual acuity and spherical equivalent measured by autorefractor served as the ground-truth labels for model training.</p>
+
+    <figure>
+      <img src="pipeline.png" alt="Study pipeline: from smartphone capture and screen calibration through tumbling-E acuity testing and questionnaire to ML model training and referral decision">
+      <figcaption>Figure 1. Study pipeline — from smartphone capture and screen calibration through the tumbling-E acuity test and questionnaire to ML model training, SE prediction, and referral screening.</figcaption>
+    </figure>
+
+    <p><strong>Feature set.</strong> Thirty-one variables were used: smartphone-measured decimal visual acuity (right eye, left eye, worse eye, inter-eye difference), age, grade, sex, vision and aberration symptoms (blackboard visibility, distance face recognition, crowded-shelf and peripheral-vision difficulty, fine-task difficulty, depth perception, glare, starbursts, haloes, night-vision difficulty, dark adaptation, asthenopia, inter-ocular difference), screen-time, viewing distance, ambient lighting, sleep difficulty, classroom seating, and outdoor activity. Reference-standard measurements (Snellen acuity, pinhole acuity, autorefraction, WHO-app scores) and spectacle ownership were excluded to prevent information leakage.</p>
+
+    <p><strong>Modelling algorithms.</strong> Eleven algorithms were trained: three pre-specified models (ridge regression, random forest, XGBoost) together with elastic-net, extra-trees, histogram-based gradient boosting, LightGBM, CatBoost, NGBoost, a TabNet deep-learning model, and a stacking ensemble.</p>
+
+    <p><strong>Validation strategy.</strong> Five-fold cross-validation with out-of-fold prediction for every participant. Evaluation metrics: MAE, RMSE, R², proportion of predictions within ±0.5 D, AUC-ROC, sensitivity, specificity, PPV, and NPV. The deployment target is offline, on-device inference via TensorFlow Lite on low-cost Android phones; on-device deployment was not undertaken in the present feasibility study.</p>
+
+    <p><strong>Software.</strong> Model development in Python (scikit-learn, XGBoost, LightGBM, CatBoost, NGBoost, PyTorch-TabNet; matplotlib for plotting). Descriptive, agreement, and diagnostic-accuracy statistics in SPSS version 21.</p>
+
+    <p><strong>Statistical analysis.</strong> Data coded and entered in Microsoft Excel. Descriptive statistics reported as frequency, proportions, and mean ± SD. Categorical analysis by chi-square test. A two-sided p value of ≤0.05 was considered statistically significant.</p>
+
+    <p><strong>Quality control and data security.</strong> Built-in input validation and screen-lock override during testing. Participant data were anonymised; stored with AES-256 encryption at rest and TLS in transit, with a secure linkage key for re-identification only during final analysis.</p>
+
+    <p><strong>Ethical considerations.</strong> The study was conducted after Institutional Ethics Committee approval. Permission was obtained from schools and higher authorities. Informed written consent from parents or guardians, and assent from students in their language of understanding, were obtained for voluntary participation.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Results</h2>
+
+    <h3>1. Sociodemographic profile</h3>
+
+    <p>A total of 110 children were studied. Most were aged 14–15 years (60; 54.5%), followed by 12–13 years (26; 23.6%) and 16 years (24; 21.8%). Females (57; 51.8%) and males (53; 48.2%) were comparably represented. By the modified B.G. Prasad scale, the largest groups were class IV lower-middle (40; 36.4%) and class III middle (30; 27.3%).</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1a. Age-group distribution (n = 110).</caption>
+        <thead>
+          <tr><th>Age group (years)</th><th class="center">Frequency (n)</th><th class="center">Percent (%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>12–13</td><td class="num">26</td><td class="num">23.6</td></tr>
+          <tr><td>14–15</td><td class="num">60</td><td class="num">54.5</td></tr>
+          <tr><td>16</td><td class="num">24</td><td class="num">21.8</td></tr>
+          <tr class="best"><td>Total</td><td class="num">110</td><td class="num">100.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1b. Sex distribution (n = 110).</caption>
+        <thead>
+          <tr><th>Category</th><th class="center">Frequency (n)</th><th class="center">Percent (%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Female</td><td class="num">57</td><td class="num">51.8</td></tr>
+          <tr><td>Male</td><td class="num">53</td><td class="num">48.2</td></tr>
+          <tr class="best"><td>Total</td><td class="num">110</td><td class="num">100.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1c. Socioeconomic status by modified B.G. Prasad scale (n = 110).</caption>
+        <thead>
+          <tr><th>Category</th><th class="center">Frequency (n)</th><th class="center">Percent (%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>I — Upper</td><td class="num">1</td><td class="num">0.9</td></tr>
+          <tr><td>II — Upper Middle</td><td class="num">25</td><td class="num">22.7</td></tr>
+          <tr><td>III — Middle</td><td class="num">30</td><td class="num">27.3</td></tr>
+          <tr><td>IV — Lower Middle</td><td class="num">40</td><td class="num">36.4</td></tr>
+          <tr><td>V — Lower</td><td class="num">14</td><td class="num">12.7</td></tr>
+          <tr class="best"><td>Total</td><td class="num">110</td><td class="num">100.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2. Visual-acuity agreement: EyeScopeAI vs physician Snellen</h3>
+
+    <p>Agreement between EyeScopeAI and physician Snellen acuity (worse eye) was statistically significant (Pearson χ² = 13.12, df = 1, p &lt; 0.001). The application classified more eyes as impaired than the Snellen chart (76 vs 44); of 66 eyes recorded as normal on Snellen testing, 37 were flagged impaired by the app, indicating a conservative, sensitivity-favouring threshold. Mean decimal acuity was marginally lower with the app (0.75 ± 0.31) than with Snellen testing (0.84 ± 0.25).</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2a. EyeScopeAI app vs physician Snellen visual acuity (worse eye); n (row %).</caption>
+        <thead>
+          <tr><th>App</th><th>Snellen Normal, n (%)</th><th>Snellen Impaired, n (%)</th><th class="center">Total</th><th>p value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Normal</td><td>29 (85.3%)</td><td>5 (14.7%)</td><td class="num">34</td><td rowspan="2" style="vertical-align:middle; font-style:italic;">Pearson χ² = 13.12, df = 1, p &lt; 0.001</td></tr>
+          <tr><td>Impaired</td><td>37 (48.7%)</td><td>39 (51.3%)</td><td class="num">76</td></tr>
+          <tr class="best"><td>Total</td><td>66</td><td>44</td><td class="num">110</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2b. Mean decimal visual acuity, app vs Snellen (mean ± SD).</caption>
+        <thead>
+          <tr><th>Snellen (Physician)</th><th>EyeScopeAI App</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0.84 ± 0.25</td><td>0.75 ± 0.31</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3. AUC-ROC curves</h3>
+
+    <p>The referral classifiers showed high discrimination, with areas under the ROC curve of 0.991 for elastic-net, 0.985 for XGBoost, 0.975 for LightGBM, and 0.972 for the stacking ensemble.</p>
+
+    <figure>
+      <img src="roc_curves.png" alt="ROC curves for the four best-performing referral models: ElasticNet AUC 0.991, XGBoost 0.985, LightGBM 0.975, Stacking 0.972">
+      <figcaption>Figure 2. ROC curves of the four best-performing referral models (worse-eye, 5-fold CV). ElasticNet achieved the highest AUC of 0.991.</figcaption>
+    </figure>
+
+    <h3>4. Screening recommendation vs autorefractor (gold standard)</h3>
+
+    <p>Against autorefraction, the elastic-net screening model correctly identified all 14 children requiring referral and misclassified 5 of 96 children not requiring referral, yielding a sensitivity of 100%, specificity of 94.8%, PPV of 73.7%, and NPV of 100% (Pearson χ² = 76.83, df = 1, p &lt; 0.001). The mean worse-eye spherical equivalent was identical between methods (autorefraction −0.33 ± 0.92 D; predicted −0.33 ± 0.72 D), with strong agreement (Eta = 0.939; Eta² = 0.881).</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 4a. EyeScopeAI (elastic-net) screening recommendation vs autorefractor spherical equivalent; n (row %).</caption>
+        <thead>
+          <tr><th>Predicted screen</th><th>Autorefractor Normal, n (%)</th><th>Autorefractor Impaired, n (%)</th><th class="center">Total</th><th>p value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Normal</td><td>91 (100%)</td><td>0 (0%)</td><td class="num">91</td><td rowspan="2" style="vertical-align:middle; font-style:italic;">Pearson χ² = 76.83, df = 1, p &lt; 0.001</td></tr>
+          <tr><td>Impaired</td><td>5 (26.3%)</td><td>14 (73.7%)</td><td class="num">19</td></tr>
+          <tr class="best"><td>Total</td><td>96</td><td>14</td><td class="num">110</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Sensitivity 100%, Specificity 94.8%, PPV 73.7%, NPV 100%.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 4b. Mean worse-eye spherical equivalent, autorefraction vs EyeScopeAI prediction (mean ± SD).</caption>
+        <thead>
+          <tr><th>Autorefractor</th><th>EyeScopeAI (ElasticNet predicted SE)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>−0.33 ± 0.92 D</td><td>−0.33 ± 0.72 D</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>5. Model performance — 5-fold cross-validation (n = 110)</h3>
+
+    <p>Across 11 algorithms, random forest provided the most accurate worse-eye spherical-equivalent estimate (MAE 0.364 D; 84.5% of predictions within ±0.5 D; R² 0.50). For the referral decision, elastic-net achieved the highest sensitivity (100%) while tree-ensemble models offered higher specificity.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5a. Worse-eye spherical-equivalent estimation by model (5-fold CV).</caption>
+        <thead>
+          <tr><th>Model</th><th class="center">MAE</th><th class="center">RMSE</th><th class="center">R²</th><th class="center">Within ±0.5 D</th></tr>
+        </thead>
+        <tbody>
+          <tr class="best"><td>RandomForest ★</td><td class="num">0.364</td><td class="num">0.651</td><td class="num">0.496</td><td class="num">84.5%</td></tr>
+          <tr><td>NGBoost</td><td class="num">0.376</td><td class="num">0.613</td><td class="num">0.553</td><td class="num">83.6%</td></tr>
+          <tr><td>XGBoost</td><td class="num">0.378</td><td class="num">0.655</td><td class="num">0.490</td><td class="num">79.1%</td></tr>
+          <tr><td>CatBoost</td><td class="num">0.384</td><td class="num">0.685</td><td class="num">0.443</td><td class="num">80.0%</td></tr>
+          <tr><td>Stacking</td><td class="num">0.404</td><td class="num">0.700</td><td class="num">0.417</td><td class="num">75.5%</td></tr>
+          <tr><td>ExtraTrees</td><td class="num">0.419</td><td class="num">0.813</td><td class="num">0.214</td><td class="num">82.7%</td></tr>
+          <tr><td>TabNet</td><td class="num">0.463</td><td class="num">0.944</td><td class="num">−0.059</td><td class="num">80.0%</td></tr>
+          <tr><td>ElasticNet</td><td class="num">0.481</td><td class="num">0.761</td><td class="num">0.312</td><td class="num">66.4%</td></tr>
+          <tr><td>HistGBR</td><td class="num">0.494</td><td class="num">0.741</td><td class="num">0.346</td><td class="num">61.8%</td></tr>
+          <tr><td>LightGBM</td><td class="num">0.520</td><td class="num">0.758</td><td class="num">0.317</td><td class="num">59.1%</td></tr>
+          <tr><td>Ridge</td><td class="num">0.549</td><td class="num">0.815</td><td class="num">0.211</td><td class="num">59.1%</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">★ Best estimation model by MAE and proportion within ±0.5 D.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5b. Right-eye (OD) spherical-equivalent estimation by model.</caption>
+        <thead>
+          <tr><th>Model</th><th class="center">MAE</th><th class="center">RMSE</th><th class="center">R²</th><th class="center">Within ±0.5 D</th></tr>
+        </thead>
+        <tbody>
+          <tr class="best"><td>RandomForest ★</td><td class="num">0.305</td><td class="num">0.642</td><td class="num">0.421</td><td class="num">87.3%</td></tr>
+          <tr><td>CatBoost</td><td class="num">0.310</td><td class="num">0.629</td><td class="num">0.444</td><td class="num">88.2%</td></tr>
+          <tr><td>NGBoost</td><td class="num">0.313</td><td class="num">0.640</td><td class="num">0.425</td><td class="num">87.3%</td></tr>
+          <tr><td>XGBoost</td><td class="num">0.326</td><td class="num">0.632</td><td class="num">0.439</td><td class="num">84.5%</td></tr>
+          <tr><td>Stacking</td><td class="num">0.339</td><td class="num">0.645</td><td class="num">0.415</td><td class="num">84.5%</td></tr>
+          <tr><td>ExtraTrees</td><td class="num">0.341</td><td class="num">0.752</td><td class="num">0.206</td><td class="num">88.2%</td></tr>
+          <tr><td>ElasticNet</td><td class="num">0.419</td><td class="num">0.713</td><td class="num">0.286</td><td class="num">74.5%</td></tr>
+          <tr><td>TabNet</td><td class="num">0.439</td><td class="num">1.093</td><td class="num">−0.678</td><td class="num">84.5%</td></tr>
+          <tr><td>HistGBR</td><td class="num">0.450</td><td class="num">0.679</td><td class="num">0.351</td><td class="num">67.3%</td></tr>
+          <tr><td>LightGBM</td><td class="num">0.459</td><td class="num">0.686</td><td class="num">0.338</td><td class="num">67.3%</td></tr>
+          <tr><td>Ridge</td><td class="num">0.481</td><td class="num">0.754</td><td class="num">0.202</td><td class="num">66.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5c. Left-eye (OS) spherical-equivalent estimation by model.</caption>
+        <thead>
+          <tr><th>Model</th><th class="center">MAE</th><th class="center">RMSE</th><th class="center">R²</th><th class="center">Within ±0.5 D</th></tr>
+        </thead>
+        <tbody>
+          <tr class="best"><td>RandomForest ★</td><td class="num">0.297</td><td class="num">0.517</td><td class="num">0.630</td><td class="num">87.3%</td></tr>
+          <tr><td>NGBoost</td><td class="num">0.295</td><td class="num">0.470</td><td class="num">0.694</td><td class="num">86.4%</td></tr>
+          <tr><td>XGBoost</td><td class="num">0.296</td><td class="num">0.503</td><td class="num">0.650</td><td class="num">83.6%</td></tr>
+          <tr><td>Stacking</td><td class="num">0.324</td><td class="num">0.538</td><td class="num">0.600</td><td class="num">83.6%</td></tr>
+          <tr><td>CatBoost</td><td class="num">0.326</td><td class="num">0.552</td><td class="num">0.579</td><td class="num">83.6%</td></tr>
+          <tr><td>ExtraTrees</td><td class="num">0.355</td><td class="num">0.651</td><td class="num">0.413</td><td class="num">82.7%</td></tr>
+          <tr><td>TabNet</td><td class="num">0.346</td><td class="num">0.621</td><td class="num">0.466</td><td class="num">81.8%</td></tr>
+          <tr><td>ElasticNet</td><td class="num">0.436</td><td class="num">0.640</td><td class="num">0.434</td><td class="num">69.1%</td></tr>
+          <tr><td>LightGBM</td><td class="num">0.470</td><td class="num">0.678</td><td class="num">0.364</td><td class="num">66.4%</td></tr>
+          <tr><td>HistGBR</td><td class="num">0.464</td><td class="num">0.675</td><td class="num">0.369</td><td class="num">62.7%</td></tr>
+          <tr><td>Ridge</td><td class="num">0.508</td><td class="num">0.699</td><td class="num">0.323</td><td class="num">60.9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5d. Referral screening performance by model (worse eye).</caption>
+        <thead>
+          <tr><th>Model</th><th class="center">Sens.</th><th class="center">Spec.</th><th class="center">PPV</th><th class="center">NPV</th><th class="center">AUC</th><th class="center">TP</th><th class="center">FP</th><th class="center">FN</th><th class="center">TN</th></tr>
+        </thead>
+        <tbody>
+          <tr class="best"><td>ElasticNet ★</td><td class="num">100%</td><td class="num">94.8%</td><td class="num">0.737</td><td class="num">1.000</td><td class="num">0.991</td><td class="num">14</td><td class="num">5</td><td class="num">0</td><td class="num">91</td></tr>
+          <tr><td>LightGBM</td><td class="num">92.9%</td><td class="num">90.6%</td><td class="num">0.591</td><td class="num">0.989</td><td class="num">0.975</td><td class="num">13</td><td class="num">9</td><td class="num">1</td><td class="num">87</td></tr>
+          <tr><td>HistGBR</td><td class="num">92.9%</td><td class="num">93.8%</td><td class="num">0.684</td><td class="num">0.989</td><td class="num">0.969</td><td class="num">13</td><td class="num">6</td><td class="num">1</td><td class="num">90</td></tr>
+          <tr><td>Stacking</td><td class="num">92.9%</td><td class="num">97.9%</td><td class="num">0.867</td><td class="num">0.989</td><td class="num">0.972</td><td class="num">13</td><td class="num">2</td><td class="num">1</td><td class="num">94</td></tr>
+          <tr><td>Ridge</td><td class="num">85.7%</td><td class="num">89.6%</td><td class="num">0.545</td><td class="num">0.977</td><td class="num">0.969</td><td class="num">12</td><td class="num">10</td><td class="num">2</td><td class="num">86</td></tr>
+          <tr><td>TabNet</td><td class="num">85.7%</td><td class="num">97.9%</td><td class="num">0.857</td><td class="num">0.979</td><td class="num">0.913</td><td class="num">12</td><td class="num">2</td><td class="num">2</td><td class="num">94</td></tr>
+          <tr><td>RandomForest</td><td class="num">78.6%</td><td class="num">97.9%</td><td class="num">0.846</td><td class="num">0.969</td><td class="num">0.950</td><td class="num">11</td><td class="num">2</td><td class="num">3</td><td class="num">94</td></tr>
+          <tr><td>CatBoost</td><td class="num">78.6%</td><td class="num">100%</td><td class="num">1.000</td><td class="num">0.970</td><td class="num">0.927</td><td class="num">11</td><td class="num">0</td><td class="num">3</td><td class="num">96</td></tr>
+          <tr><td>XGBoost</td><td class="num">78.6%</td><td class="num">96.9%</td><td class="num">0.786</td><td class="num">0.969</td><td class="num">0.985</td><td class="num">11</td><td class="num">3</td><td class="num">3</td><td class="num">93</td></tr>
+          <tr><td>ExtraTrees</td><td class="num">71.4%</td><td class="num">97.9%</td><td class="num">0.833</td><td class="num">0.959</td><td class="num">0.968</td><td class="num">10</td><td class="num">2</td><td class="num">4</td><td class="num">94</td></tr>
+          <tr><td>NGBoost</td><td class="num">71.4%</td><td class="num">96.9%</td><td class="num">0.769</td><td class="num">0.959</td><td class="num">0.968</td><td class="num">10</td><td class="num">3</td><td class="num">4</td><td class="num">93</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">★ Best referral model by sensitivity and AUC. Referral criterion: worse-eye SE ≤ −0.75 D, ≥ +2.0 D, or cylinder ≤ −1.0 D.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Discussion</h2>
+
+    <p>In this feasibility study, an offline smartphone-based machine-learning model estimated the spherical equivalent of refractive error within ±0.5 D of autorefraction in the majority of children and, when applied as a referral screen, identified those requiring ophthalmic evaluation with high sensitivity. The best-performing estimation model (random forest) achieved an MAE of 0.36 D with 84.5% of predictions within ±0.5 D, whereas the referral classifier (elastic-net) attained a sensitivity of 100% and an NPV of 100% against the gold standard. These findings indicate that lightweight, on-device AI can extend refractive-error screening to schools through non-specialist administrators without specialist equipment or internet connectivity.</p>
+
+    <p>The accuracy of spherical-equivalent estimation was comparable to previously reported ML models. Du et al. — using ocular biometric inputs to predict cycloplegic SE in Chinese school children — reported an MAE of 0.37–0.44 D with 77–83% within ±0.5 D.<sup>14</sup> Our model achieved a similar MAE (0.36 D) and a marginally higher proportion within ±0.5 D (84.5%), despite relying solely on smartphone-measured visual acuity and questionnaire responses rather than on biometric measurements such as axial length. The lower R² (0.50 vs 0.89–0.93 in biometry-based models) was expected, as visual acuity carries less direct optical information than ocular biometry; the clinically relevant ±0.5 D agreement target was nonetheless met.</p>
+
+    <p>The EyeScopeAI application showed moderate agreement with physician Snellen acuity (χ² = 13.12, p &lt; 0.001), tending to classify more eyes as impaired. A comparable pattern was reported by Raffa et al., whose "Smart Optometry" application detected subnormal visual acuity with a sensitivity of 89.3% but showed systematic differences from conventional charts.<sup>13</sup> This conservative behaviour — favouring sensitivity over specificity — is desirable in a screening context where missing a child with genuine visual deficit carries greater cost than a false alarm.</p>
+
+    <p>For the referral decision, the model achieved an AUC of 0.991 with perfect sensitivity, exceeding the diagnostic performance reported for several smartphone-based screening tools. The proportion of children meeting referral criteria (12.7%) was consistent with the prevalence of refractive error reported among Indian school children.<sup>12</sup> The non-cycloplegic threshold of −0.75 D adopted here corresponds to the standard cycloplegic definition of −0.50 D for myopia in Indian children<sup>9</sup> and to the optimal non-cycloplegic referral cut-off for the 13–15-year age group.<sup>10</sup></p>
+
+    <p>By embedding visual-acuity testing, a brief questionnaire, and automated referral logic within a single offline application, the workflow can be delivered by schoolteachers or accredited social health activists during routine school hours, reducing dependence on specialist personnel and urban clinics. This aligns with the objectives of the National Programme for Control of Blindness and Visual Impairment.</p>
+
+    <p>Strengths include the use of autorefraction as an objective reference standard, comparison of multiple contemporary algorithms within a cross-validated framework reported in accordance with TRIPOD and STARD recommendations, and the generation of out-of-fold predictions that minimise optimistic bias. Limitations include internal validation within a single district, a modest sample, and a small number of referral-positive children — the apparently perfect sensitivity should therefore be interpreted with caution. Refraction was assessed without cycloplegia, and only distance acuity was measured. External and temporal validation in independent, prospectively recruited cohorts is required before programmatic recommendation.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Conclusion</h2>
+    <ul>
+      <li>An offline, smartphone-based ML model estimated the spherical equivalent of refractive error within ±0.5 D of autorefraction in the majority of rural high-school children.</li>
+      <li>The referral classifier identified children requiring ophthalmic evaluation with 100% sensitivity and 100% NPV against autorefraction as the gold standard.</li>
+      <li>The approach offers a low-cost, equipment-free adjunct to school vision screening administrable by non-specialist personnel in resource-limited settings.</li>
+      <li>Prospective external validation on clinically measured, cycloplegic refraction data is the necessary next step before programmatic adoption.</li>
+    </ul>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Comparable Studies</h2>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 6. Summary of comparable studies.</caption>
+        <thead>
+          <tr><th>Reference</th><th>Method / Classifier</th><th>Population</th><th>Key performance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Raffa et al. (2022)<sup>13</sup></td><td>Smartphone VA app (Smart Optometry)</td><td>Children &lt;18 y, Saudi Arabia</td><td>Sensitivity 89.3% for subnormal VA</td></tr>
+          <tr><td>Du et al. (2023)<sup>14</sup></td><td>ML (biometry-based SE prediction)</td><td>School children, China</td><td>MAE 0.37–0.44 D; 77–83% within ±0.5 D</td></tr>
+          <tr><td>Gopalakrishnan et al. (2021)<sup>9</sup></td><td>Open-field autorefraction (threshold)</td><td>Children 5–15 y, South India</td><td>SE ≤ −0.75 D non-cycloplegic ≡ −0.50 D cycloplegic</td></tr>
+          <tr class="best"><td>Present study</td><td>ML (app VA + questionnaire)</td><td>High-school children, North Karnataka</td><td>RF: MAE 0.36 D, 84.5% within ±0.5 D; referral (elastic-net) sensitivity 100%, specificity 94.8%, AUC 0.991</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>References</h2>
+    <ol class="refs">
+      <li>Yang Z, Jin G, Li Z, et al. Global disease burden of uncorrected refractive error among adolescents from 1990 to 2019. <em>BMC Public Health.</em> 2021;21(1):1–10.</li>
+      <li>Holden BA, Fricke TR, Wilson DA, et al. Global prevalence of myopia and high myopia and temporal trends from 2000 through 2050. <em>Ophthalmology.</em> 2016;123(5):1036–42.</li>
+      <li>Das S, Mitra K, Mandal M. Sample size calculation: Basic principles. <em>Indian J Anaesth.</em> 2016;60(9):1–7.</li>
+      <li>Rajabpour M, Kangari H, Pesudovs K, et al. Refractive error and vision related quality of life. <em>BMC Ophthalmol.</em> 2024;24(1):1–6.</li>
+      <li>Harman NB. The Definition of Blindness. <em>BMJ.</em> 1926;1(3412):907–8.</li>
+      <li>Negrel AD, Maul E, Pokharel GP, Zhao J, Ellwein LB. Refractive error study in children: sampling and measurement methods for a multi-country survey. <em>Am J Ophthalmol.</em> 2000;129(4):421–6.</li>
+      <li>Brooke J. SUS: A "Quick and Dirty" Usability Scale. In: Jordan PW, Thomas B, Weerdmeester BA, McClelland IL, eds. <em>Usability Evaluation in Industry.</em> London: Taylor & Francis; 1996:189–94.</li>
+      <li>Kohn JP, Frazer GH. An Academic Stress Scale: Identification and Rated Importance of Academic Stressors. <em>Psychol Rep.</em> 1986;59(2):415–26.</li>
+      <li>Gopalakrishnan A, Hussaindeen JR, Sivaraman V, et al. The Sankara Nethralaya Tamil Nadu Essilor Myopia (STEM) Study — defining a threshold for non-cycloplegic myopia prevalence in children. <em>J Clin Med.</em> 2021;10(6):1215.</li>
+      <li>Lyu P, Shi J, Wang J, et al. Optimizing myopia screening referral guidelines for children aged 4 to 18 based on non-cycloplegic indicators. <em>BMC Ophthalmol.</em> 2025;25(1):561.</li>
+      <li>Negrel AD, Maul E, Pokharel GP, Zhao J, Ellwein LB. Refractive error study in children: sampling and measurement methods for a multi-country survey. <em>Am J Ophthalmol.</em> 2000;129(4):421–6.</li>
+      <li>Murthy GVS, Gupta SK, Ellwein LB, et al. Refractive error in children in an urban population in New Delhi. <em>Invest Ophthalmol Vis Sci.</em> 2002;43(3):623–31.</li>
+      <li>Raffa LH, Balbaid NT, Ageel MM. "Smart Optometry" phone-based application as a visual acuity testing tool among pediatric population. <em>Saudi Med J.</em> 2022;43(8):946–53.</li>
+      <li>Du B, Wang Q, Luo Y, et al. Prediction of spherical equivalent difference before and after cycloplegia in school-age children with machine learning algorithms. <em>Front Public Health.</em> 2023;11:1096330.</li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <em>Funded by the Indian Council of Medical Research (ICMR) Short-Term Studentship (STS) Grant. Ethics approval obtained from the Institutional Ethics Committee, Gadag Institute of Medical Sciences. The authors declare no conflicts of interest.</em>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Gangadharan &amp; Iti · <a href="https://anirudhgangadharan.github.io/">Portfolio</a> · <a href="https://github.com/anirudhgangadharan">GitHub</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
